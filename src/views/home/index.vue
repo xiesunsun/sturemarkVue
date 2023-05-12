@@ -22,18 +22,18 @@
             </div>
         </section>
         <section class="top-right">
-            <div class="border top-right-border">
+            <div ref="barechartsDom" class="border top-right-border">
                 <BarEchart :tabledata="tabledata"></BarEchart>
             </div>
         </section>
         <section class="bottom-left">
             <div class="border bottom-left-border">
-                line-chart
+                <lineEchart :lineData="linedata"></lineEchart>
             </div>
         </section>
         <section class="bottom-right">
             <div class="border bottom-right-border">
-                spider-chat
+                <radarchart :radarData="radarData"></radarchart>
             </div>
         </section>
     </div>
@@ -41,8 +41,9 @@
 <script>
 import worker from "../../assets/home/lawyer.png"
 import BarEchart from "@/components/stu/BarEchart.vue"
-import Echarts from "@/components/stu/testbar.vue"
-import { getStuEchart } from "@/api/stuhome"
+import lineEchart from "@/components/stu/lineEchart.vue"
+import radarchart from "@/components/stu/radarchart.vue"
+import { getStuEchart, getStuLinechart, getStuRadarchart } from "@/api/stuhome"
 
 export default {
     computed: {
@@ -60,9 +61,21 @@ export default {
                 catagoty: null,
                 value: null
             },
+            linedata: {
+                legend: null,
+                xData: null,
+                series: null,
+            },
+            radarData: {
+                legend: null,
+                indicator: null,
+                series: null,
+
+            }
 
         }
     },
+
     created() {
         //BAR-chart的数据获取功能
         getStuEchart().then(response => {
@@ -70,18 +83,33 @@ export default {
                 catagory: response.data["category"],
                 value: response.data["value"]
             }
-        },
+        }),
             //line-chart的数据获取功能
+            getStuLinechart().then(response => {
+                this.linedata = {
+                    legend: response.data["legend"],
+                    xData: response.data["xData"],
+                    series: response.data["series"],
+                }
+
+            }),
 
             //radar-chart的数据获取功能
-        )
+            getStuRadarchart().then(response => {
+                this.radarData = {
+                    legend: response.data["legend"],
+                    indicator: response.data["indicator"],
+                    series: response.data["series"],
+                }
 
+            })
 
     },
+
     components: {
         BarEchart,
-        Echarts,
-
+        lineEchart,
+        radarchart
     }
 }
 
@@ -138,6 +166,8 @@ export default {
     bottom: 2px;
     display: flex;
     flex-direction: column;
+
+
 }
 
 .line {
@@ -156,6 +186,7 @@ export default {
     min-height: 40px;
     padding: 5px 0;
 }
+
 
 span {
     font-family: '宋体';

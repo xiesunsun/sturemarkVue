@@ -1,5 +1,5 @@
 <template>
-    <div id="myEcharts" :style="{ width: '900px', height: '250px' }"></div>
+    <div id="myEcharts" style="width: 100%; height: 100%"></div>
 </div></template>
 <script>
 export default {
@@ -7,7 +7,8 @@ export default {
         tabledata: {
             type: Object,
             default: {}
-        }
+        },
+
     },
     mounted() {
         console.log(this.tabledata) //由于数据传输的异步性质，首先并不会显示到mounted的时候，所以需要进行检测
@@ -17,18 +18,15 @@ export default {
 
             this.initchart()
 
-        }
-    },
-    data() {
-        return {
-            editchartdata: ""
-        }
+        },
+
     },
     methods: {
         initchart() {
             let chart = this.$echarts.init(document.getElementById("myEcharts"), "light");
             // 颠倒x轴y轴的位置进行相应的图标的横坐标方向进行实施
             chart.setOption({
+
                 yAxis: {
                     type: "category",
                     data: this.tabledata.category, //目录项 是一个字符串数组就ok
@@ -84,9 +82,12 @@ export default {
 
 
             });
-            window.onresize = function () {
+            // window.onresize = function () {
+            //     chart.resize()
+            // };
+            window.addEventListener("resize", () => {
                 chart.resize();
-            };
+            });
         }
     }
 
